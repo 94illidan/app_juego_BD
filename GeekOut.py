@@ -125,6 +125,16 @@ def anotar_puntos():
 
 ############### Comienza el juego ###############
 
+print('---Bienvenido al juego Geek, el objetivo es puntuar la mayor cantidad de puntos posibles sin perder')
+print('---Para jugar debes elegir un dado de los dados activos, si el dado no fue lanzado no lo puedes usar')
+print('---Si el dado es un cohete debes elegir otro dado activo para eliminarlo, si es un corazon debes elegir un dado inactivo para activarlo')
+print('---Si el dado es un meple debes elegir un dado activo para volver a lanzarlo, si es un heroe debes elegir un dado activo para mostrar su cara opuesta')
+print('---Si el dado es un dragon no tiene accion, si al final de la partida te quedan todos los dados con dragones perdiste')
+print('---Si el dado es un 42 no tiene accion, pero si al final de la partida te quedan todos los dados con 42 puntuas')
+print('---Si el dado es un cohete y es el ultimo dado que te queda perdiste')
+print('---IMPORTANTE, si deseas salir escribe "exit" en el dado que quieres usar para salir del juego')
+
+
 lanzar_dados()
 
 while seguir_jugando == 'y' or seguir_jugando == 'Y':
@@ -143,47 +153,50 @@ while seguir_jugando == 'y' or seguir_jugando == 'Y':
         
         #que dado quiere elegir el usuario
         dados_del_usuario = input('que dado quieres usar? ')
-        
-        # consulto si el dado lanzado esta activo sino lo imprimo y consulto nuevamente
-        if dados_del_usuario in Dados['dados_activos']:
-            #esto lo hice porque la funcion no puede ser un numero
-            if dados_del_usuario == '42':
-                dados_del_usuario = 'numero'
-            #utilizo el input del usuario para llamar directo a la funcion del propio dado (lo encontre en chatgpt)
-            if dados_del_usuario in locals() and callable(locals()[dados_del_usuario]):
-                locals()[dados_del_usuario]()
-            else:
-                print('El dado no existe')
+        if dados_del_usuario == 'exit':
+            seguir_jugando = 'n'
         else:
-            print('El dado no fue lanzado')        
-        
-        unico_cohete = all(elemento == 'cohete' for elemento in Dados['dados_activos'])
-        if unico_cohete and len(Dados['dados_activos']) == 1:
-            print('Perdiste,tu ultimo dado fue el cohete y te exploto')
-            seguir_jugando = 'n'
-        
-        
-        lista_vacia()
-        
-        #si salen todos 42 puntuo y/o sigo tirndo los dados que queden
-        #lo quise hacer una funcion pero al hacerlo no me devolvia lo que yo queria 
-        todos_42 = all(elemento == '42' for elemento in Dados['dados_activos'])
-        if todos_42:
-            puntos_a_calcular = puntos_a_calcular + len(Dados['dados_activos'])
-            puntaje = (puntuacion[puntos_a_calcular - 1])
-            print('Quedaste con todos 42 tu puntaje es de: ', puntaje)
-            print('dados inactivos: ', Dados['cantidad_inactivos'], ' Dados utilizados: ', Dados['cantidad_utilizados'])
-            Dados['cantidad_activos'] -= len(Dados['dados_activos'])
-            Dados['dados_activos'] = []
-            lanzar_dados()
-            seguir_jugando = input('quieres seguir jugando Y/N?: ')
-        
-        #si salen dragones y 42 ambos dados no tienen una funcion mas que terminar la partida o puntuar, en este caso 
-        #es perdida del  juego
-        todos_dragones_42 = all(elemento == 'dragon' or elemento == '42' for elemento in Dados['dados_activos'])
-        if todos_dragones_42:
-            print('Perdiste no tenes mas opciones y tenes dragones', Dados['dados_activos'])
-            seguir_jugando = 'n'
+            
+            # consulto si el dado lanzado esta activo sino lo imprimo y consulto nuevamente
+            if dados_del_usuario in Dados['dados_activos']:
+                #esto lo hice porque la funcion no puede ser un numero
+                if dados_del_usuario == '42':
+                    dados_del_usuario = 'numero'
+                #utilizo el input del usuario para llamar directo a la funcion del propio dado (lo encontre en chatgpt)
+                if dados_del_usuario in locals() and callable(locals()[dados_del_usuario]):
+                    locals()[dados_del_usuario]()
+                else:
+                    print('El dado no existe')
+            else:
+                print('El dado no fue lanzado')        
+            
+            unico_cohete = all(elemento == 'cohete' for elemento in Dados['dados_activos'])
+            if unico_cohete and len(Dados['dados_activos']) == 1:
+                print('Perdiste,tu ultimo dado fue el cohete y te exploto')
+                seguir_jugando = 'n'
+            
+            
+            lista_vacia()
+            
+            #si salen todos 42 puntuo y/o sigo tirndo los dados que queden
+            #lo quise hacer una funcion pero al hacerlo no me devolvia lo que yo queria 
+            todos_42 = all(elemento == '42' for elemento in Dados['dados_activos'])
+            if todos_42:
+                puntos_a_calcular = puntos_a_calcular + len(Dados['dados_activos'])
+                puntaje = (puntuacion[puntos_a_calcular - 1])
+                print('Quedaste con todos 42 tu puntaje es de: ', puntaje)
+                print('dados inactivos: ', Dados['cantidad_inactivos'], ' Dados utilizados: ', Dados['cantidad_utilizados'])
+                Dados['cantidad_activos'] -= len(Dados['dados_activos'])
+                Dados['dados_activos'] = []
+                lanzar_dados()
+                seguir_jugando = input('quieres seguir jugando Y/N?: ')
+            
+            #si salen dragones y 42 ambos dados no tienen una funcion mas que terminar la partida o puntuar, en este caso 
+            #es perdida del  juego
+            todos_dragones_42 = all(elemento == 'dragon' or elemento == '42' for elemento in Dados['dados_activos'])
+            if todos_dragones_42:
+                print('Perdiste no tenes mas opciones y tenes dragones', Dados['dados_activos'])
+                seguir_jugando = 'n'
 
 
 
